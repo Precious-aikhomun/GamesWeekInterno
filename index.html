@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCC Gaming Hub - Torneo PS5 & Jornada Tech</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <header class="navbar">
+    <div class="container nav-content">
+      <div class="brand-logo">
+        <span class="badge-ccc">CCC</span>
+        <span class="brand-name">GAME FEST</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#inicio">Inicio</a>
+        <a href="#torneo">Torneo en Vivo</a>
+        <a href="#inscripcion">Registro</a>
+        <a href="#ubicacion">Ubicación</a>
+      </nav>
+      <a href="#inscripcion" class="btn-nav">Inscribirse</a>
+    </div>
+  </header>
+
+  <section id="inicio" class="hero-section">
+    <div class="hero-backdrop"></div>
+    <div class="container hero-content">
+      <div class="status-pill">
+        <span class="pulse-dot"></span>
+        <span>Jornada de Puertas Abiertas & Gaming </span>
+      </div>
+      
+      <h1 class="hero-title">
+        EL EVENTO GAMING <br>
+        <span class="text-accent">DE CENTRO CCC</span>
+      </h1>
+      
+      <p class="hero-description">
+        Descubre las instalaciones tecnológicas de CCC, asiste a masterclasses de la industria del videojuego y compite en el torneo de PlayStation 5 en directo.
+      </p>
+
+      <div class="hero-highlights">
+        <div class="highlight-item">
+          <span class="highlight-value">Enero 2027</span>
+          <span class="highlight-label">Fecha del Evento</span>
+        </div>
+        <div class="highlight-item">
+          <span class="highlight-value">10:00 - 19:30</span>
+          <span class="highlight-label">Horario Continuo</span>
+        </div>
+        <div class="highlight-item">
+          <span class="highlight-value">PS5 ARENA</span>
+          <span class="highlight-label">Torneo Oficial</span>
+        </div>
+        <div class="highlight-item">
+          <span class="highlight-value">GRATUITO</span>
+          <span class="highlight-label">Entrada Libre</span>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#torneo" class="btn-primary">Ver Torneo en Directo</a>
+        <a href="#ubicacion" class="btn-secondary">Cómo Llegar</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="torneo" class="section-wrapper">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-sub">Actualización en Tiempo Real</span>
+        <h2 class="section-title">Fase Final del Torneo</h2>
+        <p class="section-subtitle">Sigue el avance de los jugadores clasificados en la arena de PS5</p>
+      </div>
+
+      <div class="bracket-controls">
+        <button class="tab-btn active" data-game="eafc">EA Sports FC 25</button>
+        <button class="tab-btn" data-game="tekken">Tekken 8</button>
+      </div>
+
+      <div id="bracketContainer" class="bracket-tree"></div>
+    </div>
+  </section>
+
+  <section id="inscripcion" class="section-wrapper bg-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-sub">Plazas Limitadas</span>
+        <h2 class="section-title">Inscripción al Evento</h2>
+        <p class="section-subtitle">Regístrate para competir en consola o acudir como asistente/espectador</p>
+      </div>
+
+      <div class="form-card">
+        <form id="tournamentForm" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="playerName">Nombre Completo *</label>
+              <input type="text" id="playerName" required placeholder="Ej. Cristian Nieto">
+            </div>
+            <div class="form-group">
+              <label for="playerTag">Gamertag / PSN ID *</label>
+              <input type="text" id="playerTag" required placeholder="Ej. Cris_Nieto">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="playerEmail">Correo Electrónico *</label>
+              <input type="email" id="playerEmail" required placeholder="correo@ejemplo.com">
+            </div>
+            <div class="form-group">
+              <label for="playerGame">Modalidad *</label>
+              <select id="playerGame">
+                <option value="eafc">EA Sports FC 25 (PS5)</option>
+                <option value="tekken">Tekken 8 (PS5)</option>
+                <option value="espectador">Solo Asistente / Espectador</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="affiliation">Vinculación con CCC</label>
+            <select id="affiliation">
+              <option value="alumno">Alumno CCC (Desarrollo Web / Grados Tech)</option>
+              <option value="otro_alumno">Alumno CCC (Otros Grados)</option>
+              <option value="externo">Invitado externo / Futuro alumno</option>
+            </select>
+          </div>
+
+ 
+
+<div class="checkbox-group">
+  <input type="checkbox" id="privacyPolicy" required>
+  <label for="privacyPolicy">
+    He leído y acepto la <a href="#politica-privacidad" id="openPrivacyModal">Política de Privacidad</a> y el tratamiento de mis datos para la gestión del torneo. *
+  </label>
+</div>
+
+          <button type="submit" class="btn-action">Confirmar Registro</button>
+          
+          <div id="formFeedback" class="alert-box success is-hidden">
+            ✓ ¡Inscripción completada! Recibirás los detalles de acceso y horarios en tu email.
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="ubicacion" class="section-wrapper">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-sub">Sede Oficial</span>
+        <h2 class="section-title">Lugar del Evento</h2>
+        <p class="section-subtitle">Instalaciones del Centro de Formación Profesional CCC en Madrid</p>
+      </div>
+
+      <div class="location-grid">
+        <div class="location-details">
+          <div class="location-card">
+            <h3>Centro de Formación Profesional CCC</h3>
+            <p class="address-text">
+              📍 <strong>Calle de San Sotero, 3 - Planta 5</strong><br>
+              28037 Madrid, España
+            </p>
+            
+            <div class="access-info">
+              <h4>Cómo Llegar:</h4>
+              <ul>
+                <li>🚇 <strong>Metro:</strong> Suances (Línea 5) a 6 minutos a pie o Ciudad Lineal.</li>
+                <li>🚌 <strong>Autobuses:</strong> Líneas 77, 104 y 105.</li>
+                <li>🏢 <strong>Acceso al Torneo:</strong> Entrada principal, ascensores directos a la <strong>Planta 5 (Aulas Tech / Arena Gaming)</strong>.</li>
+              </ul>
+            </div>
+
+            <a href="https://maps.google.com/?q=Calle+de+San+Sotero,+3,+28037+Madrid" target="_blank" rel="noopener" class="btn-maps">
+              Abrir en Google Maps App ↗
+            </a>
+          </div>
+        </div>
+
+        <div class="map-frame-wrapper">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3036.7576579603597!2d-3.633917823528577!3d40.43632997143615!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd422f4625b12853%3A0x6b107e3a242c75a!2sC.%20de%20San%20Sotero%2C%203%2C%2028037%20Madrid!5e0!3m2!1ses!2ses!4v1700000000000!5m2!1ses!2ses" 
+            width="100%" 
+            height="100%" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-wrapper bg-alt">
+    <div class="container text-center">
+      <h3 class="section-title" style="font-size: 2.2rem;">Sponsors & Colaboradores</h3>
+      <p class="section-subtitle">Impulsando el talento tecnológico y gaming</p>
+
+      <div class="sponsors-grid">
+        <div class="sponsor-item"><strong>PlayStation</strong></div>
+        <div class="sponsor-item"><strong>Razer</strong></div>
+        <div class="sponsor-item"><strong>Monster Energy</strong></div>
+        <div class="sponsor-item"><strong>Madrid in Game</strong></div>
+        <div class="sponsor-item"><strong>Comunidad de Madrid</strong></div>
+      </div>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>© 2026 Centro de Formación Profesional CCC. Evento tecnológico y torneo de esports.</p>
+      <p>C/ San Sotero, 3 - Planta 5, Madrid.</p>
+    </div>
+  </footer>
+  <div id="politica-privacidad" class="legal-card">
+  <h3>Información Básica sobre Protección de Datos</h3>
+  <ul>
+    <li><strong>Responsable:</strong> Organización del Evento Gaming CCC Madrid.</li>
+    <li><strong>Finalidad:</strong> Gestión de la inscripción, asignación de puestos de juego y control de acceso a las instalaciones (C/ San Sotero, 3).</li>
+    <li><strong>Legitimación:</strong> Consentimiento explícito del interesado al inscribirse.</li>
+    <li><strong>Destinatarios:</strong> No se cederán datos a terceros ajenos a la organización del torneo, salvo obligación legal.</li>
+    <li><strong>Derechos:</strong> Acceso, rectificación, supresión y demás derechos enviando solicitud a la administración del centro.</li>
+  </ul>
+</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
