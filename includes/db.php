@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 // includes/db.php
 require_once __DIR__ . '/config.php';
 
@@ -54,3 +55,19 @@ function db(): PDO
 
 // 2. Exponer $pdo globalmente usando la misma instancia singleton para compatibilidad con api/*.php
 $pdo = db();
+=======
+require_once __DIR__ . '/config.php';
+
+// Devuelve la conexión PDO a MySQL (se crea una sola vez)
+function db(): PDO {
+    static $pdo = null;
+    if ($pdo === null) {
+        $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+        $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+    }
+    return $pdo;
+}
+>>>>>>> c5ca3b16b7cbbbf052409aec7a870727e6bc075d

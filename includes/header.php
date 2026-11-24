@@ -5,7 +5,7 @@
   <div class="header-inner">
 
     <a class="brand" href="#inicio">
-      <img src="assets/logo/logo.svg" alt="GamesWeek">
+      <img src="assets/img/logo.png" alt="GamesWeek">
     </a>
 
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
