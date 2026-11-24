@@ -1,5 +1,5 @@
 <head>
- <link rel="stylesheet" href="assets/css/footer.css">
+ <link rel="stylesheet" href="css/footer.css">
  </head>
 <footer class="pie-evento">
     <div class="pie-patrocinadores">
