@@ -1,0 +1,173 @@
+/* css/header.css */
+
+/* Colores del evento */
+:root {
+  --negro: #000001;
+  --rojo: #D2423E;
+  --blanco: #FDFDFD;
+  --amarillo: #F4B63C;
+}
+
+/* Scroll suave y espacio para que el header no tape los títulos */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 64px;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 64px;
+  background: var(--negro);
+  font-family: Arial, sans-serif;
+}
+
+.header-inner {
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand img {
+  display: block;
+  height: 40px;
+}
+
+/* ---------- Menú (versión móvil) ---------- */
+.menu,
+.submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu a {
+  display: block;
+  padding: 14px 20px;
+  color: var(--blanco);
+  text-decoration: none;
+}
+
+.menu a:hover {
+  color: var(--rojo);
+}
+
+.submenu a {
+  padding-left: 36px;
+  font-size: 15px;
+}
+
+/* El menú está oculto hasta que JS le añade la clase is-open */
+.site-nav {
+  display: none;
+  position: absolute;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: var(--negro);
+}
+
+.site-nav.is-open {
+  display: block;
+}
+
+/* Botón hamburguesa */
+.nav-toggle {
+  background: none;
+  border: none;
+  color: var(--blanco);
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* La flechita del submenú solo se usa en escritorio */
+.sub-toggle {
+  display: none;
+}
+
+/* Botón Inscribirte */
+.menu-cta a {
+  margin: 10px 20px;
+  background: var(--rojo);
+  border-radius: 4px;
+  text-align: center;
+}
+
+.menu-cta a:hover {
+  background: var(--blanco);
+  color: var(--negro);
+}
+
+/* Anillo amarillo al navegar con teclado */
+a:focus,
+button:focus {
+  outline: 2px solid var(--amarillo);
+}
+
+/* ---------- Versión escritorio (pantallas de 900px o más) ---------- */
+@media (min-width: 900px) {
+
+  .nav-toggle {
+    display: none;
+  }
+
+  .site-nav {
+    display: block;
+    position: static;
+    background: none;
+  }
+
+  .menu {
+    display: flex;
+    align-items: center;
+  }
+
+  .menu a {
+    padding: 8px 14px;
+  }
+
+  /* Actividades con su submenú desplegable */
+  .has-sub {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .sub-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--blanco);
+    font-size: 10px;
+    cursor: pointer;
+  }
+
+  .submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    background: var(--negro);
+    border-top: 2px solid var(--rojo);
+  }
+
+  .has-sub:hover .submenu,
+  .has-sub.open .submenu {
+    display: block;
+  }
+
+  .submenu a {
+    padding: 10px 16px;
+  }
+
+  .menu-cta a {
+    margin: 0 0 0 10px;
+  }
+}
