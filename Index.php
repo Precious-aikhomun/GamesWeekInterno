@@ -14,5 +14,6 @@
   <!-- aquí van las secciones: #inicio, #actividades, etc. -->
 
   <script src="js/header.js" defer></script>
+  <?php include 'includes/footer.php'; ?>
 </body>
 </html>

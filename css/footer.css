@@ -1,0 +1,107 @@
+:root {
+    --color-negro: #000001;
+    --color-rojo: #D2423E;
+    --color-blanco: #FDFDFD;
+    --color-amarillo: #F4B63C;
+    --color-superficie-oscura: #0d0d10;
+    --color-texto-secundario: #a1a1aa;
+}
+
+.pie-evento {
+    background-color: var(--color-negro);
+    color: var(--color-blanco);
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    border-top: 3px solid var(--color-rojo);
+    margin-top: 4rem;
+}
+
+.contenedor-pie {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.pie-patrocinadores {
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(253, 253, 253, 0.08);
+}
+
+.titulo-patrocinadores {
+    text-align: center;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-texto-secundario);
+    margin: 0 0 1.5rem 0;
+}
+
+.rejilla-patrocinadores {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 4.5rem;
+}
+
+.item-patrocinador img {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(100%) brightness(1.8);
+    opacity: 0.7;
+    transition: all 0.25s ease;
+}
+
+.item-patrocinador:hover img {
+    filter: grayscale(0%) brightness(1);
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+/* --- BARRA INFERIOR --- */
+.pie-inferior {
+    border-top: 1px solid rgba(253, 253, 253, 0.08);
+    padding: 1.25rem 0;
+    font-size: 0.82rem;
+    color: var(--color-texto-secundario);
+}
+
+.barra-inferior {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.enlaces-legales a {
+    color: var(--color-texto-secundario);
+    text-decoration: none;
+}
+
+.enlaces-legales a:hover {
+    color: var(--color-blanco);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+    .rejilla-pie {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .rejilla-pie {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .rejilla-patrocinadores {
+        gap: 1.5rem;
+    }
+
+    .barra-inferior {
+        flex-direction: column;
+        text-align: center;
+    }
+}
