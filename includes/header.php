@@ -4,6 +4,7 @@
 
     <a class="brand" href="#inicio">
       <img src="assets/img/logo.png" alt="GamesWeek">
+      <b class="d">Game <i>Week</i></b>
     </a>
 
     <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-principal">☰</button>
