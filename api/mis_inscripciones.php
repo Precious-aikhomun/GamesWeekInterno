@@ -1,29 +1,10 @@
 <?php
 // api/mis_inscripciones.php
-header('Content-Type: application/json; charset=utf-8');
-
 require_once __DIR__ . '/../includes/db.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode([
-        'success' => false,
-        'error'   => 'Método no permitido. Usa GET.'
-    ]);
-    exit;
-}
+requireHttpMethod('GET');
 
-if (empty($_SESSION['usuario_id'])) {
-    http_response_code(401);
-    echo json_encode([
-        'success'                => false,
-        'requiere_autenticacion' => true,
-        'error'                  => 'Debes iniciar sesión para consultar tus inscripciones.'
-    ]);
-    exit;
-}
-
-$usuarioId         = (int) $_SESSION['usuario_id'];
+$usuarioId = requireAuthenticatedUserId('Debes iniciar sesión para consultar tus inscripciones.');
 $incluirCanceladas = isset($_GET['incluir_canceladas']) && $_GET['incluir_canceladas'] === '1';
 
 try {
@@ -32,15 +13,8 @@ try {
     $stmtUser->execute([$usuarioId]);
 
     if (!$stmtUser->fetch()) {
-        session_unset();
-        session_destroy();
-        http_response_code(401);
-        echo json_encode([
-            'success'                => false,
-            'requiere_autenticacion' => true,
-            'error'                  => 'La sesión ha caducado o el usuario no existe.'
-        ]);
-        exit;
+        clearUserSession();
+        jsonError('La sesión ha caducado o el usuario no existe.', 401, ['requiere_autenticacion' => true]);
     }
 
     $filtroEstado = $incluirCanceladas ? '' : "AND i.estado != 'cancelada'";
@@ -59,18 +33,12 @@ try {
             a.tematica,
             a.fecha_inicio,
             a.fecha_fin,
+            a.sala_id,
             s.nombre AS sala_nombre,
             s.ubicacion AS sala_ubicacion,
             td.formato AS torneo_formato,
             v.nombre AS videojuego_nombre,
-            v.pegi AS videojuego_pegi,
-            (
-                SELECT ast.hora_entrada
-                FROM asistencias ast
-                WHERE ast.inscripcion_id = i.id
-                ORDER BY ast.hora_entrada ASC
-                LIMIT 1
-            ) AS hora_checkin
+            v.pegi AS videojuego_pegi
         FROM inscripciones i
         INNER JOIN actividades a ON i.actividad_id = a.id
         LEFT JOIN salas s ON a.sala_id = s.id
@@ -85,32 +53,65 @@ try {
     $stmt->execute([$usuarioId]);
     $filas = $stmt->fetchAll();
 
-    $stmtPosicionEspera = $pdo->prepare(
-        "SELECT COUNT(*) + 1
-         FROM inscripciones
-         WHERE actividad_id = ?
-           AND estado = 'lista_espera'
-           AND (fecha_inscripcion < ? OR (fecha_inscripcion = ? AND id < ?))"
-    );
+    $checkinsPorInscripcion = [];
+    $posicionesListaEspera  = [];
 
-    $ahora = new DateTime();
+    if (!empty($filas)) {
+        $inscripcionIds = array_map('intval', array_column($filas, 'inscripcion_id'));
+        $inPlaceholders = implode(',', array_fill(0, count($inscripcionIds), '?'));
+
+        // 1. Obtener check-ins en una única consulta por lote (usa idx_asistencias_insc_hora)
+        $stmtCheckins = $pdo->prepare(
+            "SELECT inscripcion_id, MIN(hora_entrada) AS hora_checkin
+             FROM asistencias
+             WHERE inscripcion_id IN ($inPlaceholders)
+             GROUP BY inscripcion_id"
+        );
+        $stmtCheckins->execute($inscripcionIds);
+
+        foreach ($stmtCheckins->fetchAll() as $chk) {
+            $checkinsPorInscripcion[(int) $chk['inscripcion_id']] = $chk['hora_checkin'];
+        }
+
+        // 2. Calcular posiciones en lista de espera en una sola consulta (sin N+1, compatible MySQL 5.7/8/MariaDB)
+        $waitlistActIds = [];
+        foreach ($filas as $fila) {
+            if ($fila['estado'] === 'lista_espera') {
+                $waitlistActIds[(int) $fila['actividad_id']] = true;
+            }
+        }
+
+        if (!empty($waitlistActIds)) {
+            $actIds          = array_keys($waitlistActIds);
+            $actPlaceholders = implode(',', array_fill(0, count($actIds), '?'));
+
+            // Recorrido solo de índice sobre idx_inscripciones_act_estado_fecha
+            $stmtCola = $pdo->prepare(
+                "SELECT id, actividad_id
+                 FROM inscripciones
+                 WHERE actividad_id IN ($actPlaceholders)
+                   AND estado = 'lista_espera'
+                 ORDER BY actividad_id ASC, fecha_inscripcion ASC, id ASC"
+            );
+            $stmtCola->execute($actIds);
+
+            $contadorPorAct = [];
+            foreach ($stmtCola->fetchAll() as $item) {
+                $actId = (int) $item['actividad_id'];
+                $contadorPorAct[$actId] = ($contadorPorAct[$actId] ?? 0) + 1;
+                $posicionesListaEspera[(int) $item['id']] = $contadorPorAct[$actId];
+            }
+        }
+    }
+
+    $ahora         = new DateTimeImmutable();
     $inscripciones = [];
 
     foreach ($filas as $fila) {
         $inscripcionId = (int) $fila['inscripcion_id'];
         $actividadId   = (int) $fila['actividad_id'];
-        $finalizada    = (new DateTime($fila['fecha_fin']) < $ahora);
-
-        $posicionListaEspera = null;
-        if ($fila['estado'] === 'lista_espera') {
-            $stmtPosicionEspera->execute([
-                $actividadId,
-                $fila['fecha_inscripcion'],
-                $fila['fecha_inscripcion'],
-                $inscripcionId
-            ]);
-            $posicionListaEspera = (int) $stmtPosicionEspera->fetchColumn();
-        }
+        $finalizada    = (new DateTimeImmutable($fila['fecha_fin']) < $ahora);
+        $horaCheckin   = $checkinsPorInscripcion[$inscripcionId] ?? null;
 
         $inscripciones[] = [
             'inscripcion_id'        => $inscripcionId,
@@ -122,35 +123,34 @@ try {
             'fecha_inicio'          => $fila['fecha_inicio'],
             'fecha_fin'             => $fila['fecha_fin'],
             'finalizada'            => $finalizada,
-            'sala'                  => $fila['sala_nombre'] !== null ? [
+            'sala'                  => $fila['sala_id'] !== null ? [
+                'id'        => (int) $fila['sala_id'],
                 'nombre'    => $fila['sala_nombre'],
-                'ubicacion' => $fila['sala_ubicacion']
+                'ubicacion' => $fila['sala_ubicacion'],
             ] : null,
             'torneo'                => $fila['tipo'] === 'torneo' ? [
                 'videojuego' => $fila['videojuego_nombre'],
                 'formato'    => $fila['torneo_formato'],
-                'pegi'       => $fila['videojuego_pegi'] !== null ? (int) $fila['videojuego_pegi'] : null
+                'pegi'       => $fila['videojuego_pegi'] !== null ? (int) $fila['videojuego_pegi'] : null,
             ] : null,
             'nombre_equipo'         => $fila['nombre_equipo'],
             'fecha_inscripcion'     => $fila['fecha_inscripcion'],
             'estado'                => $fila['estado'],
-            'posicion_lista_espera' => $posicionListaEspera,
+            'posicion_lista_espera' => $fila['estado'] === 'lista_espera'
+                ? ($posicionesListaEspera[$inscripcionId] ?? null)
+                : null,
             'codigo_acceso'         => $fila['codigo_acceso'],
-            'checkin_realizado'     => $fila['hora_checkin'] !== null,
-            'hora_checkin'          => $fila['hora_checkin']
+            'checkin_realizado'     => $horaCheckin !== null,
+            'hora_checkin'          => $horaCheckin,
         ];
     }
 
-    echo json_encode([
+    jsonResponse([
         'success'       => true,
         'total'         => count($inscripciones),
-        'inscripciones' => $inscripciones
+        'inscripciones' => $inscripciones,
     ]);
 
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error'   => 'Error interno al obtener tus inscripciones.'
-    ]);
+    jsonError('Error interno al obtener tus inscripciones.', 500);
 }

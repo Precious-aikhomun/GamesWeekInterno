@@ -1,70 +1,37 @@
 <?php
 // api/cancelar_inscripcion.php
-header('Content-Type: application/json; charset=utf-8');
-
 require_once __DIR__ . '/../includes/db.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode([
-        'success' => false,
-        'error'   => 'Método no permitido. Usa POST.'
-    ]);
-    exit;
-}
+requireHttpMethod('POST');
 
-if (empty($_SESSION['usuario_id'])) {
-    http_response_code(401);
-    echo json_encode([
-        'success'                => false,
-        'requiere_autenticacion' => true,
-        'error'                  => 'Debes iniciar sesión para gestionar tus inscripciones.'
-    ]);
-    exit;
-}
+$usuarioId = requireAuthenticatedUserId('Debes iniciar sesión para gestionar tus inscripciones.');
 
-$rawInput = file_get_contents('php://input');
-$data = json_decode($rawInput, true);
-if (!is_array($data)) {
-    $data = $_POST;
-}
-
-$usuarioId     = (int) $_SESSION['usuario_id'];
+$data          = getRequestData();
 $inscripcionId = filter_var($data['inscripcion_id'] ?? null, FILTER_VALIDATE_INT);
 $actividadId   = filter_var($data['actividad_id'] ?? null, FILTER_VALIDATE_INT);
 
-if (!$inscripcionId && !$actividadId) {
-    http_response_code(400);
-    echo json_encode([
-        'success' => false,
-        'error'   => 'Debes indicar inscripcion_id o actividad_id.'
-    ]);
-    exit;
+if ((!$inscripcionId || $inscripcionId <= 0) && (!$actividadId || $actividadId <= 0)) {
+    jsonError('Debes indicar inscripcion_id o actividad_id.', 400);
 }
 
 try {
     // Localizar primero el actividad_id sin bloqueo para mantener el orden de locks (actividades -> inscripciones)
-    if ($inscripcionId) {
+    if ($inscripcionId && $inscripcionId > 0) {
         $stmtLookup = $pdo->prepare(
             'SELECT id, actividad_id FROM inscripciones WHERE id = ? AND usuario_id = ?'
         );
-        $stmtLookup->execute([$inscripcionId, $usuarioId]);
+        $stmtLookup->execute([(int) $inscripcionId, $usuarioId]);
     } else {
         $stmtLookup = $pdo->prepare(
             'SELECT id, actividad_id FROM inscripciones WHERE actividad_id = ? AND usuario_id = ?'
         );
-        $stmtLookup->execute([$actividadId, $usuarioId]);
+        $stmtLookup->execute([(int) $actividadId, $usuarioId]);
     }
 
     $registroBase = $stmtLookup->fetch();
 
     if (!$registroBase) {
-        http_response_code(404);
-        echo json_encode([
-            'success' => false,
-            'error'   => 'No se ha encontrado ninguna inscripción asociada a tu cuenta.'
-        ]);
-        exit;
+        jsonError('No se ha encontrado ninguna inscripción asociada a tu cuenta.', 404);
     }
 
     $targetInscripcionId = (int) $registroBase['id'];
@@ -81,22 +48,12 @@ try {
 
     if (!$actividad) {
         $pdo->rollBack();
-        http_response_code(404);
-        echo json_encode([
-            'success' => false,
-            'error'   => 'La actividad asociada ya no existe.'
-        ]);
-        exit;
+        jsonError('La actividad asociada ya no existe.', 404);
     }
 
-    if (new DateTime($actividad['fecha_fin']) < new DateTime()) {
+    if (new DateTimeImmutable($actividad['fecha_fin']) < new DateTimeImmutable()) {
         $pdo->rollBack();
-        http_response_code(400);
-        echo json_encode([
-            'success' => false,
-            'error'   => 'No puedes cancelar la inscripción de una actividad que ya ha finalizado.'
-        ]);
-        exit;
+        jsonError('No puedes cancelar la inscripción de una actividad que ya ha finalizado.', 400);
     }
 
     // 2. Bloquear la inscripción del usuario y comprobar estado actual
@@ -108,12 +65,7 @@ try {
 
     if (!$inscripcion || $inscripcion['estado'] === 'cancelada') {
         $pdo->rollBack();
-        http_response_code(409);
-        echo json_encode([
-            'success' => false,
-            'error'   => 'Esta inscripción ya se encontraba cancelada.'
-        ]);
-        exit;
+        jsonError('Esta inscripción ya se encontraba cancelada.', 409);
     }
 
     $estadoAnterior = $inscripcion['estado'];
@@ -124,48 +76,58 @@ try {
     );
     $stmtCancelar->execute([$targetInscripcionId]);
 
-    // 4. Si se liberó una plaza confirmada, promover al siguiente en lista de espera
+    // 4. Si se liberó una plaza confirmada, promover al siguiente en lista de espera verificando aforo real
     $promovidoListaEspera = false;
 
     if ($estadoAnterior === 'confirmada') {
-        $stmtSiguiente = $pdo->prepare(
-            "SELECT id
-             FROM inscripciones
-             WHERE actividad_id = ? AND estado = 'lista_espera'
-             ORDER BY fecha_inscripcion ASC, id ASC
-             LIMIT 1
-             FOR UPDATE"
-        );
-        $stmtSiguiente->execute([$targetActividadId]);
-        $siguienteEnCola = $stmtSiguiente->fetch();
+        $hayPlazaDisponible = true;
 
-        if ($siguienteEnCola) {
-            $stmtPromover = $pdo->prepare(
-                "UPDATE inscripciones SET estado = 'confirmada' WHERE id = ?"
+        if ($actividad['aforo_maximo'] !== null) {
+            $stmtAforo = $pdo->prepare(
+                "SELECT COUNT(*) FROM inscripciones WHERE actividad_id = ? AND estado = 'confirmada'"
             );
-            $stmtPromover->execute([(int) $siguienteEnCola['id']]);
-            $promovidoListaEspera = true;
+            $stmtAforo->execute([$targetActividadId]);
+            $confirmadas = (int) $stmtAforo->fetchColumn();
+            $hayPlazaDisponible = ($confirmadas < (int) $actividad['aforo_maximo']);
+        }
+
+        if ($hayPlazaDisponible) {
+            $stmtSiguiente = $pdo->prepare(
+                "SELECT id
+                 FROM inscripciones
+                 WHERE actividad_id = ? AND estado = 'lista_espera'
+                 ORDER BY fecha_inscripcion ASC, id ASC
+                 LIMIT 1
+                 FOR UPDATE"
+            );
+            $stmtSiguiente->execute([$targetActividadId]);
+            $siguienteEnCola = $stmtSiguiente->fetch();
+
+            if ($siguienteEnCola) {
+                $stmtPromover = $pdo->prepare(
+                    "UPDATE inscripciones SET estado = 'confirmada' WHERE id = ?"
+                );
+                $stmtPromover->execute([(int) $siguienteEnCola['id']]);
+                $promovidoListaEspera = true;
+            }
         }
     }
 
     $pdo->commit();
 
-    echo json_encode([
+    jsonResponse([
         'success'                => true,
         'mensaje'                => 'Tu inscripción ha sido cancelada correctamente.',
         'inscripcion_id'         => $targetInscripcionId,
         'actividad_id'           => $targetActividadId,
         'actividad'              => $actividad['titulo'],
-        'promovido_lista_espera' => $promovidoListaEspera
+        'estado'                 => 'cancelada',
+        'promovido_lista_espera' => $promovidoListaEspera,
     ]);
 
 } catch (Exception $e) {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error'   => 'Error interno al cancelar la inscripción.'
-    ]);
+    jsonError('Error interno al cancelar la inscripción.', 500);
 }
