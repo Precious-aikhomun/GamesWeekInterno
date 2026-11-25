@@ -20,7 +20,7 @@
       <div class="row"><small>Lugar</small><span class="d">CCC Madrid</span></div>
       <div class="row"><small>Incluye</small><span class="d">Torneos · Cosplay · Día Indie</span></div>
     </div>
-    <div class="btns"><a class="btn" href="#inscribirte">Competir →</a><a class="lnk" href="#programa">Ver programa</a></div>
+    <div class="btns"><a class="btn" href="#torneos">Competir →</a><a class="lnk" href="#programa">Ver programa</a></div>
   </section>
   </main>
 </div>

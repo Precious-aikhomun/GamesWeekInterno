@@ -132,6 +132,49 @@ if (!function_exists('requireAuthenticatedUserId')) {
     }
 }
 
+if (!function_exists('promoverSiguienteListaEspera')) {
+    /**
+     * Promueve al siguiente inscrito en lista de espera si existe plaza confirmada disponible.
+     * Debe invocarse dentro de una transacción con la fila de actividades bloqueada FOR UPDATE.
+     */
+    function promoverSiguienteListaEspera(PDO $pdo, int $actividadId, ?int $aforoMaximo): bool
+    {
+        if ($aforoMaximo !== null) {
+            $stmtAforo = $pdo->prepare(
+                "SELECT COUNT(*) FROM inscripciones WHERE actividad_id = ? AND estado = 'confirmada'"
+            );
+            $stmtAforo->execute([$actividadId]);
+            $confirmadas = (int) $stmtAforo->fetchColumn();
+
+            if ($confirmadas >= $aforoMaximo) {
+                return false;
+            }
+        }
+
+        $stmtSiguiente = $pdo->prepare(
+            "SELECT id
+             FROM inscripciones
+             WHERE actividad_id = ? AND estado = 'lista_espera'
+             ORDER BY fecha_inscripcion ASC, id ASC
+             LIMIT 1
+             FOR UPDATE"
+        );
+        $stmtSiguiente->execute([$actividadId]);
+        $siguienteEnCola = $stmtSiguiente->fetch();
+
+        if (!$siguienteEnCola) {
+            return false;
+        }
+
+        $stmtPromover = $pdo->prepare(
+            "UPDATE inscripciones SET estado = 'confirmada' WHERE id = ?"
+        );
+        $stmtPromover->execute([(int) $siguienteEnCola['id']]);
+
+        return true;
+    }
+}
+
 if (!function_exists('db')) {
     /**
      * Devuelve la conexión PDO a MySQL (Singleton por petición).

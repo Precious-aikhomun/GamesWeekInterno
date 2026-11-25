@@ -1,0 +1,171 @@
+/* css/torneos.css */
+
+.torneos-section {
+  border-top: 1px solid var(--line);
+}
+
+.torneos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 18px;
+}
+
+.torneo-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--red);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.torneo-card.is-enrolled {
+  border-top-color: var(--teal);
+}
+
+.torneo-game-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.torneo-game-name {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--teal);
+}
+
+.torneo-card h3 {
+  margin: 0 0 8px;
+  font-size: 21px;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.torneo-details {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.torneo-details strong {
+  color: var(--text);
+}
+
+.torneo-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Cuadros y clasificación (#clasificacion) */
+.clasificacion-block {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+
+.clasificacion-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.clasificacion-head h3 {
+  margin: 0;
+  font-family: "Barlow Condensed", sans-serif;
+  text-transform: uppercase;
+  font-size: 28px;
+  color: var(--text);
+}
+
+.clasificacion-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bracket-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+.bracket-round {
+  background: rgba(28, 29, 34, 0.65);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.bracket-round h4 {
+  margin: 0 0 12px;
+  font-family: "Barlow Condensed", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 16px;
+  color: var(--yellow);
+}
+
+.match-box {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.match-box + .match-box {
+  margin-top: 10px;
+}
+
+.match-box.is-live {
+  border-color: var(--red);
+}
+
+.match-player {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.match-player + .match-player {
+  border-top: 1px solid var(--line);
+}
+
+.match-player.is-winner {
+  color: var(--teal);
+  font-weight: 700;
+}
+
+.match-player.is-empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.match-score {
+  font-weight: 700;
+  color: var(--yellow);
+}

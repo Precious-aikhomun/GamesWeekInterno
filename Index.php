@@ -9,6 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/programa.css">
+  <link rel="stylesheet" href="css/torneos.css">
+  <link rel="stylesheet" href="css/modals.css">
   <link rel="stylesheet" href="css/footer.css">
 </head>
 <body>
@@ -18,10 +21,18 @@
   <?php include 'sections/programa.php'; ?>
   <?php include 'sections/ponentes.php'; ?>
   <?php include 'sections/como-llegar.php'; ?>
-  <?php include 'sections/inscribirte.php'; ?>
+  <?php include 'sections/torneos.php'; ?>
   <?php include 'includes/footer.php'; ?>
+  <?php include 'includes/modals.php'; ?>
 
   <script src="js/header.js" defer></script>
   <script src="js/main.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/inscripcion-modal.js" defer></script>
+  <script src="js/mis-inscripciones.js" defer></script>
+  <script src="js/perfil.js" defer></script>
+  <script src="js/programa.js" defer></script>
+  <script src="js/torneos.js" defer></script>
 </body>
 </html>

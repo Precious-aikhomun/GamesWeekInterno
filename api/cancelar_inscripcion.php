@@ -80,37 +80,8 @@ try {
     $promovidoListaEspera = false;
 
     if ($estadoAnterior === 'confirmada') {
-        $hayPlazaDisponible = true;
-
-        if ($actividad['aforo_maximo'] !== null) {
-            $stmtAforo = $pdo->prepare(
-                "SELECT COUNT(*) FROM inscripciones WHERE actividad_id = ? AND estado = 'confirmada'"
-            );
-            $stmtAforo->execute([$targetActividadId]);
-            $confirmadas = (int) $stmtAforo->fetchColumn();
-            $hayPlazaDisponible = ($confirmadas < (int) $actividad['aforo_maximo']);
-        }
-
-        if ($hayPlazaDisponible) {
-            $stmtSiguiente = $pdo->prepare(
-                "SELECT id
-                 FROM inscripciones
-                 WHERE actividad_id = ? AND estado = 'lista_espera'
-                 ORDER BY fecha_inscripcion ASC, id ASC
-                 LIMIT 1
-                 FOR UPDATE"
-            );
-            $stmtSiguiente->execute([$targetActividadId]);
-            $siguienteEnCola = $stmtSiguiente->fetch();
-
-            if ($siguienteEnCola) {
-                $stmtPromover = $pdo->prepare(
-                    "UPDATE inscripciones SET estado = 'confirmada' WHERE id = ?"
-                );
-                $stmtPromover->execute([(int) $siguienteEnCola['id']]);
-                $promovidoListaEspera = true;
-            }
-        }
+        $aforoMaximo = $actividad['aforo_maximo'] !== null ? (int) $actividad['aforo_maximo'] : null;
+        $promovidoListaEspera = promoverSiguienteListaEspera($pdo, $targetActividadId, $aforoMaximo);
     }
 
     $pdo->commit();

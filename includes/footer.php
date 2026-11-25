@@ -1,6 +1,3 @@
-<head>
- <link rel="stylesheet" href="css/footer.css">
- </head>
 <footer class="pie-evento">
     <div class="pie-patrocinadores">
         <div class="contenedor-pie">

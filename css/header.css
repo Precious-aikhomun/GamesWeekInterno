@@ -11,7 +11,7 @@
 /* Scroll suave y espacio para que el header no tape los títulos */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 64px;
+  scroll-padding-top: 76px;
 }
 
 /* ---------- Header ---------- */
@@ -19,61 +19,78 @@ html {
   position: sticky;
   top: 0;
   z-index: 100;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   height: 64px;
   background: var(--negro);
-  font-family: Arial, sans-serif;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: "Barlow", system-ui, -apple-system, sans-serif;
 }
 
 .header-inner {
-  max-width: 1200px;
+  max-width: 1240px;
   height: 100%;
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
-.brand img {
+.site-header .brand img {
   display: block;
   height: 40px;
 }
 
 /* ---------- Menú (versión móvil) ---------- */
-.menu,
-.submenu {
+.site-header .menu,
+.site-header .submenu {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.menu a {
+.site-header .menu a {
   display: block;
   padding: 14px 20px;
   color: var(--blanco);
   text-decoration: none;
-}
-
-.menu a:hover {
-  color: var(--rojo);
-}
-
-.submenu a {
-  padding-left: 36px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  font-family: inherit;
   font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.site-header .menu a:hover {
+  color: var(--rojo);
+  background: transparent;
+}
+
+.site-header .submenu a {
+  padding-left: 36px;
+  font-size: 14px;
 }
 
 /* El menú está oculto hasta que JS le añade la clase is-open */
-.site-nav {
+.site-header .site-nav {
   display: none;
   position: absolute;
   top: 64px;
   left: 0;
   right: 0;
   background: var(--negro);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
 }
 
-.site-nav.is-open {
+.site-header .site-nav.is-open {
   display: block;
 }
 
@@ -84,6 +101,7 @@ html {
   color: var(--blanco);
   font-size: 28px;
   cursor: pointer;
+  padding: 4px 8px;
 }
 
 /* La flechita del submenú solo se usa en escritorio */
@@ -91,49 +109,220 @@ html {
   display: none;
 }
 
-/* Botón Inscribirte */
-.menu-cta a {
-  margin: 10px 20px;
-  background: var(--rojo);
-  border-radius: 4px;
-  text-align: center;
+/* ---------- Área de autenticación / usuario en header ---------- */
+.menu-auth {
+  padding: 8px 20px 4px;
+  position: relative;
 }
 
-.menu-cta a:hover {
-  background: var(--blanco);
-  color: var(--negro);
+.btn-header-auth {
+  width: 100%;
+  padding: 10px 18px;
+  border: 1.5px solid var(--rojo);
+  border-radius: 999px;
+  background: var(--rojo);
+  color: var(--blanco);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-header-auth:hover {
+  background: #e0524e;
+  border-color: #e0524e;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(61, 224, 200, 0.55);
+  background: rgba(28, 29, 34, 0.95);
+  color: var(--blanco);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.user-menu-btn:hover,
+.user-menu.is-open .user-menu-btn {
+  border-color: #3de0c8;
+  background: #23252c;
+}
+
+.user-avatar-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--rojo);
+  color: var(--blanco);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.user-display-name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-caret {
+  font-size: 11px;
+  color: #a9abb3;
+  transition: transform 0.2s ease;
+}
+
+.user-menu.is-open .user-caret {
+  transform: rotate(180deg);
+}
+
+.user-dropdown {
+  display: none;
+  margin-top: 8px;
+  background: #16171d;
+  border: 1px solid #2c2e35;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+.user-menu.is-open .user-dropdown {
+  display: block;
+}
+
+.user-dropdown-meta {
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid #2c2e35;
+  margin-bottom: 6px;
+}
+
+.user-dropdown-nick {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #3de0c8;
+}
+
+.user-dropdown-fullname {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blanco);
+}
+
+.user-dropdown-email {
+  display: block;
+  font-size: 12px;
+  color: #a9abb3;
+  word-break: break-all;
+}
+
+.user-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--blanco);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.user-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.user-dropdown-item.is-danger {
+  color: #ff7e7a;
+}
+
+.user-dropdown-item.is-danger:hover {
+  background: rgba(210, 67, 63, 0.18);
+}
+
+.user-dropdown-sep {
+  border: none;
+  border-top: 1px solid #2c2e35;
+  margin: 6px 0;
+}
+
+.badge-count {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--rojo);
+  color: var(--blanco);
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.is-hidden {
+  display: none !important;
 }
 
 /* Anillo amarillo al navegar con teclado */
-a:focus,
-button:focus {
+.site-header a:focus-visible,
+.site-header button:focus-visible {
   outline: 2px solid var(--amarillo);
+  outline-offset: 2px;
 }
 
 /* ---------- Versión escritorio (pantallas de 900px o más) ---------- */
 @media (min-width: 900px) {
-
   .nav-toggle {
     display: none;
   }
 
-  .site-nav {
+  .site-header .site-nav {
     display: block;
     position: static;
     background: none;
+    border-bottom: none;
+    padding-bottom: 0;
   }
 
-  .menu {
+  .site-header .menu {
     display: flex;
     align-items: center;
+    gap: 2px;
   }
 
-  .menu a {
-    padding: 8px 14px;
+  .site-header .menu a {
+    padding: 8px 13px;
   }
 
   /* Actividades con su submenú desplegable */
-  .has-sub {
+  .site-header .has-sub {
     position: relative;
     display: flex;
     align-items: center;
@@ -146,28 +335,50 @@ button:focus {
     color: var(--blanco);
     font-size: 10px;
     cursor: pointer;
+    padding: 6px 4px 6px 0;
   }
 
-  .submenu {
+  .site-header .submenu {
     display: none;
     position: absolute;
     top: 100%;
     left: 0;
-    min-width: 180px;
-    background: var(--negro);
+    min-width: 190px;
+    background: #14151a;
+    border: 1px solid #2c2e35;
     border-top: 2px solid var(--rojo);
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
   }
 
-  .has-sub:hover .submenu,
-  .has-sub.open .submenu {
+  .site-header .has-sub:hover .submenu,
+  .site-header .has-sub.open .submenu {
     display: block;
   }
 
-  .submenu a {
+  .site-header .submenu a {
     padding: 10px 16px;
   }
 
-  .menu-cta a {
-    margin: 0 0 0 10px;
+  .menu-auth {
+    padding: 0;
+    margin-left: 10px;
+  }
+
+  .btn-header-auth {
+    width: auto;
+    padding: 9px 20px;
+  }
+
+  .user-menu-btn {
+    width: auto;
+  }
+
+  .user-dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    min-width: 245px;
+    margin-top: 0;
   }
 }
