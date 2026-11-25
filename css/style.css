@@ -31,16 +31,6 @@ body {
   font-family: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
   text-transform: uppercase;
 }
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 18px 24px;
-}
 .brand {
   display: flex;
   align-items: center;
@@ -269,21 +259,12 @@ h1 span {
       var(--bg) 100%
     );
 }
-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
-  max-width: 1240px;
-  margin: 0 auto;
-}
 .hero {
   position: relative;
   z-index: 1;
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 24px 24px 72px;
+  max-width: none;
+  margin: 0;
+  padding: 24px 32px 72px;
 }
 .hero section {
   max-width: 560px;
@@ -337,11 +318,6 @@ header {
   transform: translateY(-7px) rotate(-45deg);
 }
 @media (max-width: 860px) {
-  header {
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    padding: 14px 20px;
-  }
   .brand b {
     font-size: 22px;
   }
@@ -387,6 +363,25 @@ header {
   }
   h1 {
     margin-bottom: 0;
+  }
+  .eyebrow,
+  h1 {
+    text-align: center;
+  }
+  .btns {
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px 16px;
+  }
+  .btn {
+    padding: 13px 22px;
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+  .lnk {
+    font-size: 15px;
+    letter-spacing: 1px;
   }
   .mpic {
     display: block;
@@ -457,7 +452,7 @@ header {
     width: 100%;
     display: flex;
     align-items: center;
-    padding: 0 24px clamp(16px, 3vh, 40px);
+    padding: 0 32px clamp(16px, 3vh, 40px) clamp(32px, 7vw, 140px);
   }
   h1 {
     font-size: clamp(60px, 14.5vh, 140px);
