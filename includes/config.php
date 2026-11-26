@@ -5,7 +5,7 @@ define('EVENT_START', '2027-01-18T12:00:00+01:00'); // inicio del evento (cuenta
 
 // Sede del evento (sección "Cómo llegar")
 define('SEDE_NOMBRE', 'Centro de Formación Profesional CCC');
-define('SEDE_CALLE', 'Calle de San Sotero, 3 - Planta 5');
+define('SEDE_CALLE', 'Calle de San Sotero, 3, San Blas-Canillejas');
 define('SEDE_CIUDAD', '28037 Madrid, España');
 define('SEDE_BUSQUEDA', 'Calle de San Sotero 3, 28037 Madrid, España'); // texto que entiende Google Maps
 define('MAPA_EMBED_URL', 'https://www.google.com/maps?q=' . rawurlencode(SEDE_BUSQUEDA) . '&hl=es&z=16&output=embed');

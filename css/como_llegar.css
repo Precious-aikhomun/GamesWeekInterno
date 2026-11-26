@@ -1,5 +1,3 @@
-/* css/como-llegar.css */
-
 .llegar-grid {
   display: grid;
   grid-template-columns: minmax(300px, 5fr) 7fr;
