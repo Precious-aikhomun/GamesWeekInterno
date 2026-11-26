@@ -30,11 +30,11 @@
           </li>
           <li>
             <span class="llegar-icon" aria-hidden="true">🚌</span>
-            <span><strong>Autobuses:</strong> Líneas 77, 104 y 105.</span>
+            <span><strong>Autobuses:</strong> Líneas 28, 77, 104 y 105.</span>
           </li>
           <li>
             <span class="llegar-icon" aria-hidden="true">🎟️</span>
-            <span><strong>Acceso al torneo:</strong> entrada principal, ascensores directos a la Planta 5 (Aulas Tech / Arena Gaming).</span>
+            <span><strong>Acceso al torneo:</strong> entrada principal, planta baja (Aula 2 Tech / Arena Gaming).</span>
           </li>
         </ul>
       </div>
