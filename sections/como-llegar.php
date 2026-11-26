@@ -26,7 +26,7 @@
         <ul>
           <li>
             <span class="llegar-icon" aria-hidden="true">🚇</span>
-            <span><strong>Metro:</strong> Suances (Línea 5) a 6 minutos a pie o Ciudad Lineal.</span>
+            <span><strong>Metro:</strong> Suanzes (Línea 5) a 6 minutos a pie o Ciudad Lineal.</span>
           </li>
           <li>
             <span class="llegar-icon" aria-hidden="true">🚌</span>
