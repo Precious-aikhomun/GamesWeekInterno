@@ -1,0 +1,122 @@
+/* css/ponentes.css */
+.ponentes-section {
+  background-color: var(--bg);
+  color: var(--text);
+  padding: 88px 24px;
+}
+
+.ponentes-container {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.ponentes-heading {
+  margin: 0 0 48px 0;
+  font-family: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+  font-weight: 800;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.ponentes-heading span {
+  color: var(--red);
+}
+
+.ponentes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 36px 28px;
+}
+
+@media (max-width: 640px) {
+  .ponentes-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 16px;
+  }
+}
+
+.ponente-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  background: linear-gradient(160deg, var(--surface) 0%, #15161b 100%);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.ponente-card:hover {
+  border-color: rgb(194, 78, 69);
+  transform: translateY(-3px);
+}
+
+.ponente-media {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.ponente-foto {
+  width: 100%;
+  aspect-ratio: 1 / 1.05;
+  object-fit: cover;
+  border-radius: 12px;
+  filter: grayscale(100%);
+  display: block;
+  background-color: #14151a;
+  border: 1px solid var(--line);
+}
+
+.ponente-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #252730 0%, #17181e 100%);
+  color: var(--teal);
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.ponente-nombre {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 23px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text);
+  line-height: 1.15;
+  margin: 0 0 8px 0;
+}
+
+.ponente-rol {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.45;
+  margin: 0 0 18px 0;
+}
+
+.ponente-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.ponente-badge {
+  display: inline-block;
+  background-color: rgb(236, 186, 85);
+  border: 1px solid rgba(220, 211, 41, 0.35);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 6px;
+  line-height: 1.2;
+}

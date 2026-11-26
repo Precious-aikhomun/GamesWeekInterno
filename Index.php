@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/programa.css">
   <link rel="stylesheet" href="css/torneos.css">
+  <link rel="stylesheet" href="css/ponentes.css">
   <link rel="stylesheet" href="css/como_llegar.css">
   <link rel="stylesheet" href="css/modals.css">
   <link rel="stylesheet" href="css/footer.css">
