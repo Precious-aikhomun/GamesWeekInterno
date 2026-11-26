@@ -1,0 +1,144 @@
+/* css/como-llegar.css */
+
+.llegar-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 5fr) 7fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* ---------- Tarjeta de información ---------- */
+.llegar-card {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 28px;
+  background: linear-gradient(160deg, var(--surface) 0%, #15161b 100%);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.llegar-sede {
+  margin: 0;
+  font-family: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(26px, 3vw, 36px);
+  line-height: 1;
+  color: var(--text);
+}
+
+.llegar-direccion {
+  display: flex;
+  gap: 12px;
+  font-style: normal;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.llegar-direccion strong {
+  color: var(--text);
+}
+
+.llegar-icon {
+  flex: 0 0 auto;
+  width: 1.5em;
+  text-align: center;
+}
+
+/* ---------- Transporte ---------- */
+.llegar-transporte {
+  padding: 18px 20px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.llegar-label {
+  margin: 0 0 14px;
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.llegar-transporte ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.llegar-transporte li {
+  display: flex;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.llegar-transporte li strong {
+  color: var(--text);
+}
+
+/* ---------- Botón ---------- */
+.llegar-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 14px 24px;
+  border-radius: 999px;
+  background: var(--red);
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.llegar-btn:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.llegar-btn:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+/* ---------- Mapa ---------- */
+.llegar-mapa {
+  position: relative;
+  min-height: 440px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.llegar-mapa iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 860px) {
+  .llegar-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .llegar-card {
+    padding: 22px;
+  }
+
+  .llegar-mapa {
+    min-height: 320px;
+  }
+}
